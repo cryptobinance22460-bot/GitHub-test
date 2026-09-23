@@ -276,32 +276,65 @@
     </div>
   </footer>
 
-  <script>
-    const inputs = document.querySelectorAll('.otp-input');
-    inputs.forEach((input, index) => {
-      input.addEventListener('input', (e) => {
-        if (e.target.value.length === 1 && index < inputs.length - 1) {
-          inputs[index + 1].focus();
-        }
+      </div>
+    </footer>
+    
+    <script>
+      // 1. Your existing OTP auto-advance & countdown timer logic
+      const inputs = document.querySelectorAll('.otp-input');
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          if (e.target.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+        
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
       });
+      
+      let seconds = 14;
+      const timerElement = document.getElementById('timer');
+      const countdown = setInterval(() => {
+        seconds--;
+        if (seconds >= 0) {
+          timerElement.textContent = seconds;
+        } else {
+          clearInterval(countdown);
+        }
+      }, 1000);
+      
+// 2. PLACE THE FORM SUBMISSION HANDLER HERE:
+document.getElementById('otp-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !e.target.value && index > 0) {
-          inputs[index - 1].focus();
-        }
-      });
+  // Combine the OTP digit inputs
+  const code = Array.from(inputs).map(input => input.value).join('');
+
+  try {
+    const response = await fetch('/api/verify-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
     });
 
-    let seconds = 14;
-    const timerElement = document.getElementById('timer');
-    const countdown = setInterval(() => {
-      seconds--;
-      if (seconds >= 0) {
-        timerElement.textContent = seconds;
-      } else {
-        clearInterval(countdown);
-      }
-    }, 1000);
-  </script>
+    if (response.ok) {
+      // Redirect or show success message
+      window.location.href = '/dashboard';
+    } else {
+      alert('Invalid verification code.');
+    }
+  } catch (error) {
+    console.error('Verification failed:', error);
+  }
+}); // <--- Place the closing }); here at the very end!
+
+    </script>
+    </body>
+    
+    </html>
 </body>
 </html>
