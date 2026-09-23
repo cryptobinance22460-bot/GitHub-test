@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const express = require('express');
 const path = require('path');
 
@@ -21,10 +23,13 @@ app.post('/api/verify-code', async (req, res) => {
     });
 
     res.json({ ok: true });
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ ok: false, error: 'Failed to send notification' });
   }
 });
+
+
 
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
